@@ -170,7 +170,7 @@ chapter7: How can client-centric consistency be implemented?
 
 ##### chapter8: Being Fault tolerant are related to being a dependable system. What does Dependability mean in this context? Give the four properties of Dependability. (p.463)
 
-- Ans: Dependability utilises these four properties
+- _Ans:_ Dependability utilises these four properties
   1. Reliability: the system is reliable and works as the should continuesouly
   2. Avalability: the system is available for the user at once
   3. Safety: If the system fails, the entire system does not crash
@@ -178,19 +178,34 @@ chapter7: How can client-centric consistency be implemented?
 
 ##### chapter8: Fail, error and fault is three ways a system can lead to failure. Describe these properties. (p.465)
 
-- Ans:
+- _Ans:_
   - Failure Refers to the fact that the system does not work as expected.
   - Error: Is a state that can lead to failure in the system
   - Fault: Is the result of an error
 
 ##### chapter8: Which types of failures can a system have? (p.467)
 
-- Ans:
+- _Ans:_
   ![Failures](imgs/failures.png)
 
-chapter8: How can a fault tolerant system hide the occurrence of failures from other processes using redundancy?
-chapter8: How can resilience be done using process groups? Describe process groups, and their internal structure.
-chapter8: Process resilience with grouping needs to be managed in some way. Give how the management protocols can be implemented.
+###### chapter8: How can a fault tolerant system hide the occurrence of failures from other processes using redundancy?
+
+- _Ans:_ There are three main ways a system can hide occurences of failures in a system.
+  1. Time redundancy: Utilises the fact that a transaction can be retransmitted such that all failures can be hidden.
+  2. Information redundancy: Added extra bits of information such that the system can roll back in case of failures. Hamming code is an example
+  3. Physical redundancy: Add extra processes or hardware such that the system as a whole can handle the failures.
+
+##### chapter8: How can resilience be done using process groups? Describe process groups, and their internal structure.
+
+- _Ans:_ Processes can be resiliente using groups and there are often two distinct groups:
+
+1. Flat group: There are no hiearchy in the group and every process is just as important as the other. An example is a peer-to-peer system
+2. Hiearchical group: Is an organization where there are a leader/organizer that handles the incomming request. The coordinator is responisble for handing out work for the correct process. An example is the domain name system (DNS)
+
+##### chapter8: Process resilience with grouping needs to be managed in some way. Give how the management protocols can be implemented.
+
+- _Ans:_
+
 chapter8: Process grouping is a part of the solution for building fail-tolerant. How should process in these groups be replicated?
 chapter8: What is meant when a system is k-fault tolerant?
 chapter8: What is meant by reaching consensus in a fail-tolerant system? Describe approaches to reach consensus.
