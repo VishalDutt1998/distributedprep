@@ -186,7 +186,7 @@ chapter7: How can client-centric consistency be implemented?
 ##### chapter8: Which types of failures can a system have? (p.467)
 
 - Ans:
-  ![Failures](<Skjermbilde 2023-11-18 kl. 16.28.07.png>)
+  ![Failures](imgs/failures.png)
 
 chapter8: How can a fault tolerant system hide the occurrence of failures from other processes using redundancy?
 chapter8: How can resilience be done using process groups? Describe process groups, and their internal structure.
