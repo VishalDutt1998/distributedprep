@@ -179,55 +179,127 @@ chapter7: How can client-centric consistency be implemented?
 ##### chapter8: Fail, error and fault is three ways a system can lead to failure. Describe these properties. (p.465)
 
 - _Ans:_
-  - Failure Refers to the fact that the system does not work as expected.
+  - Failure: Refers to the fact that the system does not work as expected.
   - Error: Is a state that can lead to failure in the system
   - Fault: Is the result of an error
 
 ##### chapter8: Which types of failures can a system have? (p.467)
 
-- _Ans:_
+- _Ans:_ Crash failure, omission (send and receive), timing, response (value and state transfer), byzantine.
+
   ![Failures](imgs/failures.png)
 
-###### chapter8: How can a fault tolerant system hide the occurrence of failures from other processes using redundancy?
+###### chapter8: How can a fault tolerant system hide the occurrence of failures from other processes using redundancy?(p.472)
 
 - _Ans:_ There are three main ways a system can hide occurences of failures in a system.
   1. Time redundancy: Utilises the fact that a transaction can be retransmitted such that all failures can be hidden.
   2. Information redundancy: Added extra bits of information such that the system can roll back in case of failures. Hamming code is an example
   3. Physical redundancy: Add extra processes or hardware such that the system as a whole can handle the failures.
 
-##### chapter8: How can resilience be done using process groups? Describe process groups, and their internal structure.
+##### chapter8: How can resilience be done using process groups? Describe process groups, and their internal structure.(p.473)
 
 - _Ans:_ Processes can be resiliente using groups and there are often two distinct groups:
 
 1. Flat group: There are no hiearchy in the group and every process is just as important as the other. An example is a peer-to-peer system
 2. Hiearchical group: Is an organization where there are a leader/organizer that handles the incomming request. The coordinator is responisble for handing out work for the correct process. An example is the domain name system (DNS)
 
-##### chapter8: Process resilience with grouping needs to be managed in some way. Give how the management protocols can be implemented.
+##### chapter8: Process resilience with grouping needs to be managed in some way. Give how the management protocols can be implemented.(p.474-475)
+
+- _Ans:_ You have two main protocols:
+
+1. **Primary-based replication**, commonly seen in **primary-backup protocols**, arranges processes hierarchically, designating a primary process to coordinate all write operations. Although the primary's role is fixed, backups can take over if the primary fails, initiated through an election algorithm. This protocol ensures a continuity of operations even after primary failure, enhancing fault tolerance.
+
+2. **Replicated-write protocols**, such as **_active replication_** and **_quorum-based protocols_**, organize identical processes into flat groups where multiple processes handle write operations concurrently. While eliminating single points of failure, this approach requires distributed coordination, offering resilience at the expense of increased complexity.
+
+##### chapter8: Process grouping is a part of the solution for building fail-tolerant. How should process in these groups be replicated? (p.474-475)
+
+- _Ans:_ Process grouping, vital for fail-tolerant systems, relies on effective process replication within these groups. Replication strategies include primary-based protocols, where a designated primary manages operations with backups ready to take over if needed. Alternatively, replicated-write protocols distribute write operations among identical processes in a flat structure. Determining the level of replication depends on the nature of failures. For silent failures, k + 1 processes provide k-fault tolerance, while for arbitrary failures, 2k + 1 processes are needed. The key lies in ensuring majority agreement among remaining processes to maintain system integrity despite failures.
+
+##### chapter8: What is meant when a system is k-fault tolerant?(p.475)
+
+- _Ans:_ A system being k-fault tolerant means it can sustain the failure of up to k components or processes while still functioning within its specified parameters or meeting its intended objectives. This concept refers to the system's ability to continue operating despite k failures within its components, ensuring reliability up to a predefined fault threshold. The value of 'k' determines the system's resilience to faults, whether they're silent failures, where components stop working without signaling an error, or arbitrary failures, where components continue but may produce erroneous results.
+
+##### chapter8: What is meant by reaching consensus in a fail-tolerant system? Describe approaches to reach consensus.
+
+- _Ans:_ In a fail-tolerant system, reaching consensus among processes is crucial. It means that nonfaulty processes within a group must agree on which command to execute, despite the possibility of failures. One approach, flooding-based consensus, operates in rounds where each process shares its list of proposed commands. They then merge these lists to select a command, assuming no failures. However, if a process crashes during this process, discrepancies arise. For instance, if a process receives commands from a crashed process while others don't, decisions are delayed until the next round. Ultimately, processes decide based on received commands. Despite potential lost or delayed decisions due to crashes, the algorithm ensures that, with reliable failure detection, at most one nonfaulty process remains, capable of making the final decision, ensuring eventual consensus.
+  Other algorithms such as _Raft_ and _Paxos_ can also be utilised to achieve consensus. **TODO:** Describe _Raft_ and _Paxos_
+
+##### chapter8: How can a system detect failures? (p.505-507)
+
+- _Ans:_ In distributed systems, detecting failures is essential for fault tolerance. Processes can detect failures either by actively sending 'are you alive?' messages and expecting responses or by passively waiting for messages. Typically, a timeout mechanism is employed: if a process doesn't respond within a set time, it's suspected to have crashed. However, this method faces challenges in unreliable networks, leading to false positives. Various strategies like gossip-based detection or exchanging information among nodes aim to tackle these issues. Systems ideally should distinguish between network and node failures and efficiently inform nonfaulty processes about detected failures.
+
+##### chapter8: What are the five different classes of failures that can occur in rpc systems, and how can these be solved? (p.508-515)
 
 - _Ans:_
 
-chapter8: Process grouping is a part of the solution for building fail-tolerant. How should process in these groups be replicated?
-chapter8: What is meant when a system is k-fault tolerant?
-chapter8: What is meant by reaching consensus in a fail-tolerant system? Describe approaches to reach consensus.
-chapter8: How can a system detect failures?
-chapter8: What are the five different classes of failures that can occur in rpc systems, and how can these be solved?
-chapter8: What is reliable group communication?
-chapter8: What is a distributed commit? Mention the three protocols in distributed commit.
-chapter8: Explain the protocols, one-phase commit protocol, two-phase commit protocol and three-phase commit protocol.
-chapter8: What is forward error recovery?
-chapter8: What is backward error recovery?
-chapter8: What is message logging?
-chapter8: What is a distributed snapshot?
-chapter8: What is Independent checkpointing?
-chapter8: What is an orphan process?
-chapter9: How can one control access to an object? Describe the general model, as well as some approaches of implementing a reference monitor.
-chapter9: what are some approaches to protect against malicious code?
-chapter9: the use of ACL or cryptography is fine when working with communicating parties which has the same rules. How can one protect resources wher communication is not just done in a isolated network?
-chapter9: What are the three issues we need to worry about when a client retrieves an object based on some name? and how can secure naming be solved?  
-chapter9: Describe the three main focus levels in computer security design.
-chapter9: What is a systems trusted computing base?
-chapter9: Describe how a public-key cryptosystem can be used to ensure confidential group communication.
-chapter9: Why are session keys used?
-chapter9: What is Kerberos and how does it work?
-chapter9: How do firewalls work and what are the two main "levels" of a firewall?
-chapter9: What is a DDoS attack and how can it be prevented?
+  1. Client Unable to Locate Server: This can happen if servers are down or if there's a version mismatch between the client and server interfaces. Handling this might involve exception handling or signal mechanisms.
+
+  2. Lost Request Messages: Using timers to resend requests in case of lost messages is a common strategy. However, distinguishing between lost requests and server unavailability can pose challenges.
+
+  3. Server Crashes: Differentiating between server crashes after processing requests (requiring reissue) and crashes before execution (where retransmission might suffice) is challenging. Strategies like at-least-once, at-most-once, or non-deterministic semantics are adopted but have limitations in ensuring exact-once semantics.
+
+  4. Lost Reply Messages: Employing timers again to resend requests if replies are not received within a certain time frame. However, distinguishing between lost replies and slow servers can be difficult.
+
+  5. Client Crashes: Handling orphan computations caused by client crashes can be complex. Strategies like orphan extermination, reincarnation, gentle reincarnation, and expiration have been proposed. However, these methods are crude and can have unforeseen consequences, such as lingering locks or queued processes.
+
+##### chapter8: What is reliable group communication? (p.515-517)
+
+- _Ans:_ Reliable group communication ensures that a message sent to a process group is delivered to every member of that group. It involves separating the receipt of messages from their delivery, ensuring messages are reliably delivered to all non-faulty group members. Achieving this involves managing the distinction between consensus on group membership and reliable message delivery, typically done using reliable transport protocols and acknowledgment mechanisms. Strategies might include sequence numbering messages, storing them locally until acknowledged by all receivers, and retransmitting in case of missing acknowledgments. Trade-offs exist between message count and transmission efficiency, often addressed through various approaches outlined in research and discussions on reliable multicasting.
+
+##### chapter8: What is a distributed commit? Mention the three protocols in distributed commit.
+
+- _Ans:_ The distributed commit involves having an operation being performed by each member of a process group, or none at all. The three protocols: One-phase commit, two-phase commit and three-phase commit.
+
+##### chapter8: Explain the protocols, one-phase commit protocol, two-phase commit protocol and three-phase commit protocol.
+
+- _Ans:_
+
+1. 1PC: Single coordinator responsible for managing transaction. Coordinator sends a commit request to all participants. if all ack commit request, coordinator assumes that the transaction is succsess and sends a global commit to all cohorts, if any cohorts fail to ack the commit request or if failure, the transaction is aborted.
+2. 2PC: Prepare phase, commit or abort phase. Send prepare, cohorts reply with yes or no, (they do not commit yet), based on results from prepare phase cooridantor sends global commit to all cohorts to make them commit. If any cohort reply "no" a abort message is broadcasted to all cohorts.
+3. 3PC: Handles error from 2PC where coordinator crashes after prepare phase is done. Prepare, pre-commit, commit or abort. Adds the pre-commit phase where cohorts receive the intent to commit but do not commit yet. If the coordinator receives ack from all on intent message it commits and broadcasts.
+
+##### chapter8: What is forward error recovery?
+
+- _Ans:_ Forward to a new correct state instead of rolling back to a previous checkpoint.
+
+##### chapter8: What is backward error recovery?
+
+- _Ans:_ Bring the system from an error state, back to a state where the system worked correctly.
+
+##### chapter8: What is message logging?
+
+- _Ans:_ Takes a log of all messages being sent and recieved before sending them. This is usually in combination with checkpointing.
+
+##### chapter8: What is a distributed snapshot?
+
+- _Ans:_ A distributed snapshot is a state from the entire system. This will include sending, recieving and local storage for each process in the system.
+
+##### chapter8: What is Independent checkpointing?
+
+- _Ans:_ As processes take local checkpoints independent of each other, this method is also referred to as independent checkpointing. Its implementation requires that dependencies are recorded in such a way that processes can jointly roll back to a consistent global state.
+
+##### chapter8: What is an orphan process?
+
+- _Ans:_ A process with no "parent", process A sends request to B, then process A crashes, and eventually recovers, process A is then orphan.
+
+##### chapter9: How can one control access to an object? Describe the general model, as well as some approaches of implementing a reference monitor.
+
+##### chapter9: what are some approaches to protect against malicious code?
+
+##### chapter9: the use of ACL or cryptography is fine when working with communicating parties which has the same rules. How can one protect resources wher communication is not just done in a isolated network?
+
+##### chapter9: What are the three issues we need to worry about when a client retrieves an object based on some name? and how can secure naming be solved?
+
+##### chapter9: Describe the three main focus levels in computer security design.
+
+##### chapter9: What is a systems trusted computing base?
+
+##### chapter9: Describe how a public-key cryptosystem can be used to ensure confidential group communication.
+
+##### chapter9: Why are session keys used?
+
+##### chapter9: What is Kerberos and how does it work?
+
+##### chapter9: How do firewalls work and what are the two main "levels" of a firewall?
+
+##### chapter9: What is a DDoS attack and how can it be prevented?
